@@ -35,11 +35,6 @@ export const shapeElements = [
 
 export const navElements = [
   {
-    icon: "/assets/select.svg",
-    name: "Select",
-    value: "select",
-  },
-  {
     icon: "/assets/rectangle.svg",
     name: "Rectangle",
     value: shapeElements,
@@ -58,11 +53,6 @@ export const navElements = [
     icon: "/assets/reset.svg",
     value: "reset",
     name: "Reset",
-  },
-  {
-    icon: "/assets/comments.svg",
-    value: "comments",
-    name: "Comments",
   },
 ];
 
