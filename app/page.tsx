@@ -70,6 +70,7 @@ export default function Page() {
 
     if (!canvasObjects || canvasObjects.size === 0) return true;
 
+    // Convert entries to an array to avoid the IterableIterator issue
     for (const [key] of Array.from(canvasObjects.entries())) {
       canvasObjects.delete(key);
     }
@@ -214,7 +215,7 @@ export default function Page() {
           if (file && fabricRef.current) {
             handleImageUpload({
               file,
-              canvas: fabricRef.current, // Use fabricRef.current directly
+              canvas: fabricRef.current, // Correctly using fabricRef.current
               shapeRef,
               syncShapeInStorage,
             });
