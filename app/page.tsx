@@ -4,7 +4,7 @@ import LeftSidebar from "@/components/LeftSidebar";
 import Live from "@/components/Live";
 import Navbar from "@/components/Navbar";
 import RightSidebar from "@/components/RightSidebar";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fabric } from "fabric";
 import {
   handleCanvasMouseDown,
@@ -15,9 +15,8 @@ import {
   handleCanvaseMouseMove,
   handleResize,
   initializeFabric,
-  renderCanvas
+  renderCanvas,
 } from "@/lib/canvas";
-import { useState } from "react";
 import { ActiveElement, Attributes } from "@/types/type";
 import { useMutation, useRedo, useStorage, useUndo } from "@/liveblocks.config";
 import { defaultNavElement } from "@/constants";
@@ -60,7 +59,11 @@ export default function Page() {
     canvasObjects.set(objectId, shapeData);
   }, []);
 
-  const [activeElement, setActiveElement] = useState<ActiveElement>({ name: "", value: "", icon: "" });
+  const [activeElement, setActiveElement] = useState<ActiveElement>({
+    name: "",
+    value: "",
+    icon: "",
+  });
 
   const deleteAllShapes = useMutation(({ storage }) => {
     const canvasObjects = storage.get("canvasObjects");
@@ -87,17 +90,21 @@ export default function Page() {
         fabricRef.current?.clear();
         setActiveElement(defaultNavElement);
         break;
+
       case "delete":
-        handleDelete(fabricRef.current as fabric.Canvas, deleteShapeFromStorage);
+        handleDelete(fabricRef.current as any, deleteShapeFromStorage);
         setActiveElement(defaultNavElement);
         break;
+
       case "image":
         imageInputRef.current?.click();
         isDrawing.current = false;
+
         if (fabricRef.current) {
           fabricRef.current.isDrawingMode = false;
         }
         break;
+
       default:
         break;
     }
@@ -199,15 +206,19 @@ export default function Page() {
         activeElement={activeElement}
         handleActiveElement={handleActiveElement}
         imageInputRef={imageInputRef}
-        handleImageUpload={(e: any) => {
+        handleImageUpload={(e: React.ChangeEvent<HTMLInputElement>) => {
           e.stopPropagation();
 
-          handleImageUpload({
-            file: e.target.files[0],
-            canvas: fabricRef.current as fabric.Canvas, // Extract current property
-            shapeRef,
-            syncShapeInStorage,
-          });
+          const file = e.target.files ? e.target.files[0] : null; // Ensure file exists
+
+          if (file && fabricRef.current) {
+            handleImageUpload({
+              file,
+              canvas: fabricRef.current, // Use fabricRef.current directly
+              shapeRef,
+              syncShapeInStorage,
+            });
+          }
         }}
       />
 
