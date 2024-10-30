@@ -59,9 +59,13 @@ export default function Page() {
 
     if (!canvasObjects || canvasObjects.size === 0) return true;
 
-    for (const [key, value] of canvasObjects.entries()) {
-      canvasObjects.delete(key);
-    }
+    // for (const [key, value] of canvasObjects.entries()) {
+    //   canvasObjects.delete(key);
+    // }
+    for (const [key, value] of Array.from(canvasObjects.entries())) {
+        canvasObjects.delete(key);
+      }
+
 
     return canvasObjects.size === 0;
   }, [])
