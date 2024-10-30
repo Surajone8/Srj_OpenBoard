@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import LeftSidebar from "@/components/LeftSidebar";
 import Live from "@/components/Live";
@@ -15,7 +15,7 @@ import {
   handleCanvaseMouseMove,
   handleResize,
   initializeFabric,
-  renderCanvas,
+  renderCanvas
 } from "@/lib/canvas";
 import { ActiveElement, Attributes } from "@/types/type";
 import { useMutation, useRedo, useStorage, useUndo } from "@/liveblocks.config";
@@ -59,18 +59,13 @@ export default function Page() {
     canvasObjects.set(objectId, shapeData);
   }, []);
 
-  const [activeElement, setActiveElement] = useState<ActiveElement>({
-    name: "",
-    value: "",
-    icon: "",
-  });
+  const [activeElement, setActiveElement] = useState<ActiveElement>({ name: "", value: "", icon: "" });
 
   const deleteAllShapes = useMutation(({ storage }) => {
     const canvasObjects = storage.get("canvasObjects");
 
     if (!canvasObjects || canvasObjects.size === 0) return true;
 
-    // Convert entries to an array to avoid the IterableIterator issue
     for (const [key] of Array.from(canvasObjects.entries())) {
       canvasObjects.delete(key);
     }
@@ -122,7 +117,7 @@ export default function Page() {
         canvas,
         selectedShapeRef,
         isDrawing,
-        shapeRef,
+        shapeRef
       });
     });
 
@@ -133,7 +128,7 @@ export default function Page() {
         isDrawing,
         selectedShapeRef,
         shapeRef,
-        syncShapeInStorage,
+        syncShapeInStorage
       });
     });
 
@@ -145,14 +140,14 @@ export default function Page() {
         shapeRef,
         syncShapeInStorage,
         setActiveElement,
-        activeObjectRef,
+        activeObjectRef
       });
     });
 
     canvas.on("object:modified", (options) => {
       handleCanvasObjectModified({
         options,
-        syncShapeInStorage,
+        syncShapeInStorage
       });
     });
 
@@ -167,13 +162,13 @@ export default function Page() {
     canvas.on("object:scaling", (options) => {
       handleCanvasObjectScaling({
         options,
-        setElementAttributes,
+        setElementAttributes
       });
     });
 
     window.addEventListener("resize", () => {
       handleResize({
-        canvas: fabricRef.current,
+        canvas: fabricRef.current
       });
     });
 
@@ -184,7 +179,7 @@ export default function Page() {
         undo,
         redo,
         syncShapeInStorage,
-        deleteShapeFromStorage,
+        deleteShapeFromStorage
       });
     });
 
@@ -197,7 +192,7 @@ export default function Page() {
     renderCanvas({
       fabricRef,
       canvasObjects,
-      activeObjectRef,
+      activeObjectRef
     });
   }, [canvasObjects]);
 
@@ -209,20 +204,18 @@ export default function Page() {
         imageInputRef={imageInputRef}
         handleImageUpload={(e: React.ChangeEvent<HTMLInputElement>) => {
           e.stopPropagation();
-
           const file = e.target.files ? e.target.files[0] : null; // Ensure file exists
 
           if (file && fabricRef.current) {
             handleImageUpload({
               file,
-              canvas: fabricRef.current, // Correctly using fabricRef.current
+              canvas: fabricRef.current, // Pass fabric.Canvas directly
               shapeRef,
               syncShapeInStorage,
             });
           }
         }}
       />
-
       <div className="flex h-full flex-row">
         <LeftSidebar allShapes={Array.from(canvasObjects)} />
         <Live canvasRef={canvasRef} />
