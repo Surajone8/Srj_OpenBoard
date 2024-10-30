@@ -204,7 +204,7 @@ export default function Page() {
 
           handleImageUpload({
             file: e.target.files[0],
-            canvas: fabricRef as fabric.Canvas,
+            canvas: fabricRef.current as fabric.Canvas, // Extract current property
             shapeRef,
             syncShapeInStorage,
           });
